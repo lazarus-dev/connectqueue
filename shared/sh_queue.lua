@@ -820,8 +820,9 @@ if Config.DisableHardCap then
     local announce=false
     Queue:DebugPrint("^1 [connectqueue] Disabling hardcap ^7")
 
-    AddEventHandler("onResourceStarting", function(resource)
+    AddEventHandler("onResourceStart", function(resource)
         if resource == "hardcap" then CancelEvent() return end
+        if resource ~= "connectqueue" then return end
 
         if Config.enableDiscordWhitelist then
             PerformHttpRequest("https://discord.com/api/v9/guilds/"..Config.discordServerGuild, function (errorCode, resultData, resultHeaders)
@@ -831,7 +832,7 @@ if Config.DisableHardCap then
                         if errorCode == 200 then
                             if not announce then
                                 announce=true
-                            print('^6 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n  Bot Connect To '..res.name..' Server  \n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
+                                print('^6 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n  Bot Connect To '..res.name..' Server  \n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
                             end
                         elseif errorCode == 403 then
                             if not announce then
@@ -844,7 +845,7 @@ if Config.DisableHardCap then
                                 print('^1 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx \n xxxxxxxxxxxxxx Please Check Discord Token xxxxxxxxxxxxxx\n xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
                             end
                         end
-                      end, "GET", "", {["Content-type"] = "application/json", ["Authorization"] = "Bot " .. Config.discordBotToken})
+                    end, "GET", "", {["Content-type"] = "application/json", ["Authorization"] = "Bot " .. Config.discordBotToken})
                 elseif errorCode == 403 then
                     if not announce then
                         announce=true
